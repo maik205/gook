@@ -1,1 +1,108 @@
+
+@use '@angular/material' as mat;
+@use '@angular/material-experimental' as matx;
+@use './components/book-card/book-card-theme' as book-card;
+// Plus imports for other components in your app.
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$light: matx.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: matx.$m3-yellow-palette,
+    ),
+    typography: (
+      brand-family: "Lexend",
+      plain-family: "Noto Sans",
+      bold-weight: 700,
+      medium-weight: 500,
+      regular-weight: 400,
+    ),
+  )
+);
+$dark: matx.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: matx.$m3-yellow-palette,
+    ),
+    typography: (
+      brand-family: "Lexend",
+      plain-family: "Noto Sans",
+      bold-weight: 700,
+      medium-weight: 500,
+      regular-weight: 400,
+    ),
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+
 /* You can add global styles to this file, and also import other style files */
+html {
+  // Apply the base theme at the root, so it will be inherited by the whole app.
+  @include mat.all-component-themes($light);
+  @include mat.typography-hierarchy($light);
+  @include book-card.colors($light);
+  background: linear-gradient(
+    135deg,
+    mat.get-theme-color($light, surface) 0%,
+    mat.get-theme-color($light, surface) 80%,
+    mat.get-theme-color($light, primary-container) 100%
+  );
+
+  color: mat.get-theme-color($light, on-surface);
+  a {
+    @if mat.get-theme-type($light) == dark {
+      color: mat.get-theme-color($light, primary, 50);
+    } @else {
+      color: mat.get-theme-color($light, primary, 70);
+    }
+  }
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: mat.get-theme-color($light, surface-dim);
+    border-radius: 12px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: mat.get-theme-color($light, on-surface);
+    border-radius: 12px;
+  }
+
+  /* Handle on hover */
+  ::selection {
+    background: mat.get-theme-color($light, primary);
+    color: mat.get-theme-color($light, on-primary);
+  }
+  ::-moz-selection {
+    background: mat.get-theme-color($light, primary);
+    color: mat.get-theme-color($light, on-primary);
+  }
+  h6 {
+    margin-bottom: 0 !important;
+  }
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

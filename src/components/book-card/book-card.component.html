@@ -1,0 +1,30 @@
+<mat-card
+  class="!max-w-[30rem]"
+  appearance="outlined"
+>
+<mat-card-content mat-ripple>
+  <div class="w-full h-full flex flex-row">
+    @if (true) {
+      <div class="w-64 flex rounded-lg overflow-hidden object-cover"
+      >
+        <img class="w-full h-full object-cover"
+        src="https://picsum.photos/300/500"
+      />
+      </div>
+      }
+      <div class="flex-grow px-2 flex flex-col py-2">
+        <h6 class="text-ellipsis line-clamp-2">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </h6>
+        <h6>2024</h6>
+        <div class="text-ellipsis line-clamp-1">by Hawking; Stephen; Lucy</div>
+        <div>ISBN: 12345678900</div>
+        <div class="hidden md:flex flex-grow">
+          <button mat-button>
+            Share
+          </button>
+        </div>
+      </div>
+  </div>
+</mat-card-content>
+</mat-card>

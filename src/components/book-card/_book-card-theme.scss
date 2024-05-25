@@ -1,0 +1,12 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@mixin colors($theme){
+  .card-bg {
+    background-color: mat.get-theme-color($theme, surface-container-low);
+  }
+  .card-border {
+    border: 1px solid mat.get-theme-color($theme, on-surface);
+  }
+
+}
