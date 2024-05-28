@@ -1,3 +1,59 @@
-<button matTooltip="Add a new book to your shelf" mat-fab class="!fixed bottom-5 right-5" (click)="addBook()">
+<button
+  matTooltip="Add a new book to your shelf"
+  mat-fab
+  class="!fixed bottom-5 z-50 right-5"
+  (click)="dialogService.addBook()"
+>
   <mat-icon>add</mat-icon>
 </button>
+<div class="w-full h-full flex md:flex-row flex-col">
+  <div class="md:w-64 w-full h-full box-border px-5 py-5">
+    <mat-form-field class="w-full mt-2" appearance="outline">
+      <mat-select
+        #groupCriteria
+        value="year"
+        (valueChange)="bookService.setGroupingStrategy(groupCriteria.value)"
+      >
+        <mat-option value="author">Author</mat-option>
+        <mat-option value="year">Year of publication</mat-option>
+        <mat-option value="rating">Rating</mat-option>
+      </mat-select>
+      <mat-label>Group by</mat-label>
+    </mat-form-field>
+  </div>
+  <div class="flex-grow w-full h-full flex-col overflow-y-auto">
+    @if(bookService.recommendedBook() !== undefined) {
+      <div>
+        <h2 class="!mt-5">
+          Recommended
+        </h2>
+        <book-card
+          (onEditEvent)="dialogService.editBookDialog($event)"
+          (onDeleteEvent)="dialogService.deleteBookDialog($event)"
+          [book]="bookService.recommendedBook()!"
+        ></book-card>
+      </div>
+    }
+    @for (bookGroup of sortedBookGroups(); track bookGroup) {
+    <div>
+      <h2 class="!mt-5">
+        {{ bookGroup[0] }}
+        @if ( groupCriteria.value === 'rating' ) {
+        <mat-icon> star </mat-icon>
+        }
+      </h2>
+      <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+        @for (book of bookGroup[1]; track book) {
+        <book-card
+          (onEditEvent)="dialogService.editBookDialog($event)"
+          (onDeleteEvent)="dialogService.deleteBookDialog($event)"
+          [book]="book"
+        ></book-card>
+        }
+      </div>
+    </div>
+    } @empty {
+    <h4 class="md:text-left py-5 text-center">No books added.</h4>
+    }
+  </div>
+</div>

@@ -6,7 +6,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip'
-import { CommonModule } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
+import { ThemingService } from '../services/theming.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -18,14 +20,15 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     MatInputModule,
     MatTooltipModule,
-    RouterModule
+    RouterModule,
+    MatSelectModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   iconRegistry = inject(MatIconRegistry);
-
+  themeService = inject(ThemingService);
   constructor() {
     this.iconRegistry.addSvgIcon('logo', ɵbypassSanitizationTrustResourceUrl('../assets/logo.svg'));
   }

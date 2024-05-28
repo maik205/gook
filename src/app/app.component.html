@@ -1,20 +1,17 @@
-<div class="min-h-screen p-5 box-border w-full">
+<div class="min-h-screen transition-colors flex flex-col p-5 box-border w-full">
   <nav class="w-full h-max gap-5 flex xl:flex-row flex-col items-center">
     <section class="flex w-full items-center justify-between">
       <a class="w-32" routerLink="/">
         <mat-icon class="!h-full !w-auto" svgIcon="logo">logo</mat-icon>
       </a>
-      <button mat-stroked-button>I'm feeling lucky</button>
-    </section>
-    <section class="flex w-full justify-between">
-      <mat-form-field class="w-full" appearance="outline" >
-        <input matInput placeholder="Search for books" />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
+      <button mat-icon-button (click)="themeService.toggleDarkMode()">
+        @if ( !themeService.darkMode ) {
+        <mat-icon>dark_mode</mat-icon>
+        } @else {
+        <mat-icon>light_mode</mat-icon>
+        }
+      </button>
     </section>
   </nav>
-  <main class="flex flex-grow">
-    <router-outlet></router-outlet>
-  </main>
-
+  <router-outlet></router-outlet>
 </div>

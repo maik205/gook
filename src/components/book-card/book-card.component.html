@@ -1,30 +1,41 @@
-<mat-card
-  class="!max-w-[30rem]"
-  appearance="outlined"
->
-<mat-card-content mat-ripple>
-  <div class="w-full h-full flex flex-row">
-    @if (true) {
-      <div class="w-64 flex rounded-lg overflow-hidden object-cover"
-      >
-        <img class="w-full h-full object-cover"
-        src="https://picsum.photos/300/500"
-      />
+<mat-card class="w-full h-full" appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>{{ book().title }}</mat-card-title>
+    <mat-card-subtitle>{{ book().yearOfPublication }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="w-full pt-3 box-border h-full flex-1 flex flex-row">
+      @if (book().coverUrl){
+      <div class="w-32 h-48 mr-3 rounded-lg card-border overflow-hidden">
+        <img class="w-full h-full object-cover" [src]="book().coverUrl" />
       </div>
       }
-      <div class="flex-grow px-2 flex flex-col py-2">
-        <h6 class="text-ellipsis line-clamp-2">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        </h6>
-        <h6>2024</h6>
-        <div class="text-ellipsis line-clamp-1">by Hawking; Stephen; Lucy</div>
-        <div>ISBN: 12345678900</div>
-        <div class="hidden md:flex flex-grow">
-          <button mat-button>
-            Share
+      <div class="flex-grow flex flex-col gap-2">
+        <span> By </span>
+        <div class="flex flex-wrap items-center gap-2">
+          @for (author of book().authors; track author) {
+          <mat-chip class="w-min">{{ author }}</mat-chip>
+          }
+        </div>
+        <div class="flex items-center gap-2">
+          <h6>{{ book().rating }}</h6>
+          <mat-icon>star</mat-icon>
+        </div>
+        @if ( book().isbn ) {
+        <sub>ISBN: {{ book().isbn }}</sub>
+        }
+        <div class="flex-grow gap-3 flex justify-end items-end">
+          <button mat-icon-button (click)="deleteBook()">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button (click)="editBook()">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="goToInfo()">
+            <mat-icon>information</mat-icon>
           </button>
         </div>
       </div>
-  </div>
-</mat-card-content>
+    </div>
+  </mat-card-content>
 </mat-card>

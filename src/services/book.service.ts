@@ -1,20 +1,92 @@
-import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, docSnapshots, Firestore, getDoc, getDocs, getFirestore, query, updateDoc, where } from '@angular/fire/firestore';
-import { IBook } from '../interfaces/book.interface';
+import {
+  computed,
+  effect,
+  inject,
+  Injectable,
+  signal,
+  Signal,
+  WritableSignal,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  addDoc,
+  collection,
+  collectionData,
+  CollectionReference,
+  deleteDoc,
+  doc,
+  Firestore,
+  getDoc,
+  updateDoc,
+} from '@angular/fire/firestore';
+import { IBook, IBookWithId, IBookList } from '../interfaces/book.interface';
 import { Observable } from 'rxjs';
+import {
+  GroupByAuthor,
+  GroupByRating,
+  GroupByYear,
+  GroupingContext,
+  GroupingStrategy,
+} from '../interfaces/strategies/book.strategy';
+import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BookService {
   // Inject the Firestore service
   firestore: Firestore = inject(Firestore);
+  private router: Router = inject(Router);
+  public books: Signal<IBookWithId[]> = signal([]);
+  private booksCollectionRef: CollectionReference<IBook> = collection(
+    this.firestore,
+    'books'
+  ) as CollectionReference<IBook>;
+  private groupingStrategy: WritableSignal<GroupingStrategy> = signal(
+    new GroupByYear()
+  );
+  public groupedBooks: Signal<Map<string, IBookList>> = computed(() => {
+    const groupingContext = new GroupingContext(
+      this.groupingStrategy(),
+      this.books()
+    );
+    return groupingContext.group();
+  });
 
-  public books!: Observable<IBookWithId[]>;
-  private booksCollectionRef: CollectionReference<IBook> = collection(this.firestore, 'books') as CollectionReference<IBook>;
+  public recommendedBook: Signal<IBookWithId | undefined> = computed(() => {
+    const books = this.books();
+    const filtered = books
+      .filter(
+        (book) =>
+          book && (new Date().getFullYear() - book.yearOfPublication! >= 3)
+      )
+      .sort((a, b) => a.rating - b.rating)
+      .filter((book) => books[0].rating == book.rating);
+
+    if (filtered.length === 0) {
+      return undefined;
+    }
+    return filtered[randomNumber(0, filtered.length - 1)];
+  });
 
   constructor() {
     this.getBooks();
+  }
+  public setGroupingStrategy(strategy: 'author' | 'year' | 'rating') {
+    switch (strategy) {
+      case 'author':
+        this.groupingStrategy.set(new GroupByAuthor());
+        break;
+      case 'year':
+        this.groupingStrategy.set(new GroupByYear());
+        break;
+      case 'rating':
+        this.groupingStrategy.set(new GroupByRating());
+        break;
+      default:
+        this.groupingStrategy.set(new GroupByAuthor());
+        break;
+    }
   }
 
   private getBookRef(book: IBookWithId) {
@@ -22,7 +94,12 @@ export class BookService {
   }
 
   private getBooks() {
-    this.books = collectionData<IBookWithId>(this.booksCollectionRef as CollectionReference<IBookWithId>, { idField: 'id' });
+    this.books = toSignal(
+      collectionData<IBookWithId>(
+        this.booksCollectionRef as CollectionReference<IBookWithId>,
+        { idField: 'id' }
+      )
+    ) as Signal<IBookWithId[]>;
   }
 
   public async addBook(book: IBook) {
@@ -41,11 +118,35 @@ export class BookService {
     if (!(await this.ifExists(book))) {
       throw new Error('Book does not exist');
     }
-    return await updateDoc(this.getBookRef(book), { ...book, id: undefined });
+    let _book = { ...book, id: undefined };
+    delete _book.id;
+    return await updateDoc(this.getBookRef(book), _book);
   }
 
   public async ifExists(book: IBookWithId) {
     return (await getDoc(doc(this.booksCollectionRef, book.id))).exists();
   }
+
+  public getBook(id: string): Signal<IBookWithId | undefined> {
+    return computed(() => {
+      const res = this.books().find((book) => book.id === id);
+      if (res) {
+        return res;
+      } else {
+        this.router.navigate(['/']);
+        return undefined;
+      }
+    });
+  }
+  public provideNewBook(): IBook {
+    return {
+      title: '',
+      authors: [],
+      rating: 0,
+    };
+  }
 }
-type IBookWithId = IBook & { id: string };
+function randomNumber(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+export type BookKeys = keyof IBook;

@@ -13,7 +13,7 @@ export const routes: Routes = [
   },
   {
     path: 'book',
-    loadComponent: () => import('./book-view/book-view.component').then(m => m.BookViewComponent)
+    loadComponent: async () => (await import('./book-view/book-view.component')).BookViewComponent
   },
   {
     path: '**',

@@ -1,5 +1,14 @@
-@for (_ of [1,2,3,4,5]; track $index) {
-  @if (
-    (rating()/2) - $index
-  ) {}
-}
+<div class="flex w-full gap-3 justify-center items-center">
+  <mat-icon> sentiment_very_dissatisfied </mat-icon>
+  <mat-slider
+    [min]="0"
+    [max]="10"
+    [step]="1"
+    showTickMarks
+    discrete
+    class="flex-grow"
+  >
+    <input matSliderThumb [(value)]="rating" #slider />
+  </mat-slider>
+  <mat-icon> sentiment_very_satisfied </mat-icon>
+</div>

@@ -1,0 +1,57 @@
+<div class="w-full h-full flex justify-center">
+  @if (book()) {
+  <div
+    class="w-full h-max max-w-[60rem] flex flex-col md:flex-row gap-5 md:items-start text-center md:text-left items-center flex-grow"
+  >
+    @if (book()?.coverUrl) {
+    <img
+      [src]="book()?.coverUrl || ''"
+      class="w-max min-w-64 overflow-hidden rounded-lg object-cover flex h-96"
+    />
+    }
+    @else {
+    <span class="w-max min-w-64 justify-center items-center card-border overflow-hidden rounded-lg object-cover flex h-96"
+    >
+      <mat-icon>book</mat-icon>
+    </span>
+    }
+    <div class="w-full md:text-left text-center flex flex-col">
+      <h6 class="md:hidden">
+        {{ book()?.title }}
+      </h6>
+      <h3 class="hidden md:block">
+        {{ book()?.title }}
+      </h3>
+      <h6 class="underline">{{ book()?.yearOfPublication }}</h6>
+      <section
+        class="w-full flex flex-col items-center md:items-start md:text-left text-center mt-3 gap-3"
+      >
+        <div
+          class="text-center md:text-left flex flex-wrap justify-center md:justify-start items-center gap-3"
+        >
+          by @for (author of book()?.authors; track author) {
+          <mat-chip class="w-min">{{ author }}</mat-chip>
+          }
+        </div>
+        <sub> ISBN: {{ book()?.isbn }} </sub>
+        <rating
+          (ratingChange)="updateBookRating($event)"
+          [rating]="book()!.rating"
+          class="w-full max-w-96"
+        ></rating>
+      </section>
+      <section class="flex md:justify-start justify-center gap-3">
+        <button mat-button (click)="this.deleteBook()">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+        <button mat-button (click)="this.editBook()">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+      </section>
+    </div>
+  </div>
+
+  }
+</div>
