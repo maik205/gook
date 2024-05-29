@@ -2,10 +2,8 @@ import { Component, computed, inject, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialog } from '@angular/material/dialog';
-import { BookService } from '../../services/book.service';
-import { lastValueFrom } from 'rxjs';
-import { IBook, IBookList, IBookWithId } from '../../interfaces/book.interface';
+import { BookService, randomNumber } from '../../services/book.service';
+import { IBookList, IBookWithId } from '../../interfaces/book.interface';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BookCardComponent } from '../../components/book-card/book-card.component';
 import { AsyncPipe } from '@angular/common';
@@ -23,7 +21,7 @@ import { DialogService } from '../../services/dialog.service';
     MatDialogModule,
     BookCardComponent,
     FormsModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -34,12 +32,30 @@ export class HomeComponent {
   public sortedBookGroups: Signal<[string, IBookList][]> = computed(() => {
     const sorted = Array.from(this.bookService.groupedBooks().entries()).sort(
       (a, b) => {
+        if (a[0] === 'Unknown') return 1;
         return a[0] < b[0] ? 1 : -1;
       }
     );
+    sorted.forEach((book) => {
+      book[1].sort((a, b) => a.title.localeCompare(b.title));
+    });
     return sorted;
   });
+  public recommendedBook: Signal<IBookWithId | undefined> = computed(() => {
+    const books = this.bookService.books();
+    let filtered = books.filter(
+      (book) =>
+        book &&
+        book.yearOfPublication &&
+        new Date().getFullYear() - book.yearOfPublication >= 3
+    );
+    filtered.sort((a, b) => b.rating - a.rating);
 
-
-
+    if (filtered.length === 0) {
+      return undefined;
+    }
+    const highestRating = filtered[0].rating;
+    filtered = filtered.filter((book) => book.rating === highestRating);
+    return filtered[randomNumber(0, filtered.length - 1)];
+  });
 }

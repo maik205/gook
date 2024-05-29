@@ -53,22 +53,6 @@ export class BookService {
     return groupingContext.group();
   });
 
-  public recommendedBook: Signal<IBookWithId | undefined> = computed(() => {
-    const books = this.books();
-    const filtered = books
-      .filter(
-        (book) =>
-          book && (new Date().getFullYear() - book.yearOfPublication! >= 3)
-      )
-      .sort((a, b) => a.rating - b.rating)
-      .filter((book) => books[0].rating == book.rating);
-
-    if (filtered.length === 0) {
-      return undefined;
-    }
-    return filtered[randomNumber(0, filtered.length - 1)];
-  });
-
   constructor() {
     this.getBooks();
   }
@@ -146,7 +130,7 @@ export class BookService {
     };
   }
 }
-function randomNumber(min: number, max: number) {
+export function randomNumber(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 export type BookKeys = keyof IBook;

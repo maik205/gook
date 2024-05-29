@@ -60,7 +60,7 @@ export class BookDialogComponent {
   public queryFormControl = new FormControl('', [Validators.minLength(5)]);
   public queryStatus = 'idle';
   public formGroup = this.fb.group({
-    title: [this.dialogData.title, [Validators.required]],
+    title: [this.dialogData.title, [Validators.required, Validators.maxLength(100)]],
     authors: [this.dialogData.authors, [Validators.minLength(1)]],
     rating: [this.dialogData.rating, [Validators.max(10), Validators.min(0)]],
     yearOfPublication: [
@@ -68,12 +68,11 @@ export class BookDialogComponent {
       [
         Validators.max(new Date().getFullYear()),
         Validators.min(1800),
-        Validators.required,
       ],
     ],
     isbn: [
       this.dialogData.isbn,
-      [Validators.pattern(/^[0-9]{10}$|^[0-9]{13}$/)],
+      [Validators.pattern(/^[0-9]{10}$|^[0-9]{13}$|(^[0-9]{3}-[0-9]{10}$)/)],
     ],
     coverUrl: [this.dialogData.coverUrl],
   });

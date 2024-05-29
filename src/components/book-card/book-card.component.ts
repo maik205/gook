@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { IBook, IBookWithId } from '../../interfaces/book.interface';
 import { Router } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'book-card',
@@ -15,7 +16,8 @@ import { Router } from '@angular/router';
     MatRippleModule,
     MatButtonModule,
     MatIconModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTooltipModule
   ],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.scss'

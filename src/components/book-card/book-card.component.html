@@ -25,13 +25,13 @@
         <sub>ISBN: {{ book().isbn }}</sub>
         }
         <div class="flex-grow gap-3 flex justify-end items-end">
-          <button mat-icon-button (click)="deleteBook()">
+          <button matTooltip="Delete" mat-icon-button (click)="deleteBook()">
             <mat-icon>delete</mat-icon>
           </button>
-          <button mat-icon-button (click)="editBook()">
+          <button matTooltip="Edit" mat-icon-button (click)="editBook()">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button (click)="goToInfo()">
+          <button matTooltip="Info & Rating" mat-icon-button (click)="goToInfo()">
             <mat-icon>information</mat-icon>
           </button>
         </div>

@@ -22,7 +22,7 @@
     </mat-form-field>
   </div>
   <div class="flex-grow w-full h-full flex-col overflow-y-auto">
-    @if(bookService.recommendedBook() !== undefined) {
+    @if(recommendedBook() !== undefined) {
       <div>
         <h2 class="!mt-5">
           Recommended
@@ -30,7 +30,7 @@
         <book-card
           (onEditEvent)="dialogService.editBookDialog($event)"
           (onDeleteEvent)="dialogService.deleteBookDialog($event)"
-          [book]="bookService.recommendedBook()!"
+          [book]="recommendedBook()!"
         ></book-card>
       </div>
     }

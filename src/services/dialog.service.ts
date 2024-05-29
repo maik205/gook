@@ -56,6 +56,8 @@ export class DialogService {
         .BookDialogComponent,
       {
         data: book,
+        width: '80%',
+        maxWidth: '600px',
       }
     );
     const result = await lastValueFrom<IBook | undefined>(

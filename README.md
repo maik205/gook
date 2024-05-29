@@ -1,27 +1,24 @@
-# Gook
+# Gook - Book Management
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
+Gook is a comprehensive tool designed to help you manage your book librarym, built with Angular and provides a user-friendly interface for managing your books.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **Add Books**: You can add new books to your library with all their details.
+- **Manage Books**: Update the details of the books, delete books from your library.
+- **Search Books**: A powerful search feature powered by Google Books API is included to help you find your books quickly.
+- **Group Books**: You can quickly organize your books into groups.
 
-## Code scaffolding
+## Technological features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- This project uses Angular 18 with Material Design 3 components, leveraging the new Signals API.
+- The Firebase integration is built with @angular/fire for tree-shakability and bundle size optimization
+
+## Development Server
+
+To start the development server, run `ng serve`. This will start the server and you can navigate to `http://localhost:4200/` to view the application. The application will automatically reload if you change any of the source files.
+
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+To build the project, run `ng build`. The build artifacts will be stored in the `dist/` directory.
