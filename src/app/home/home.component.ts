@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -26,7 +26,7 @@ import { DialogService } from '../../services/dialog.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   public dialogService = inject(DialogService);
   public bookService = inject(BookService);
   public sortedBookGroups: Signal<[string, IBookList][]> = computed(() => {
@@ -41,6 +41,9 @@ export class HomeComponent {
     });
     return sorted;
   });
+  ngOnInit(): void {
+    this.bookService.getBooks();
+  }
   public recommendedBook: Signal<IBookWithId | undefined> = computed(() => {
     const books = this.bookService.books();
     let filtered = books.filter(

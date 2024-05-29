@@ -3,6 +3,7 @@ import {
   effect,
   inject,
   Injectable,
+  Injector,
   signal,
   Signal,
   WritableSignal,
@@ -15,6 +16,7 @@ import {
   CollectionReference,
   deleteDoc,
   doc,
+  docData,
   DocumentReference,
   Firestore,
   getDoc,
@@ -39,6 +41,7 @@ export class BookService {
   // Inject the Router service
   private router: Router = inject(Router);
 
+  private injector: Injector = inject(Injector);
   /**
    * A signal that resolves to an array of books
    */
@@ -70,9 +73,7 @@ export class BookService {
     return groupingContext.group();
   });
 
-  constructor() {
-    this.getBooks();
-  }
+  constructor() {}
 
   /**
    * Set the grouping strategy
@@ -103,20 +104,22 @@ export class BookService {
    * @param book the book to get the reference to
    * @returns {DocumentReference} the reference to the book document
    */
-  private getBookRef(book: IBookWithId) : DocumentReference {
+  private getBookRef(book: IBookWithId): DocumentReference {
     return doc(this.booksCollectionRef, book.id);
   }
 
   /**
    * Get all books from the Firestore collection
    */
-  private getBooks() {
+  public getBooks() {
     this.books = toSignal(
       collectionData<IBookWithId>(
         this.booksCollectionRef as CollectionReference<IBookWithId>,
         { idField: 'id' }
       )
-    ) as Signal<IBookWithId[]>;
+    , {
+      injector: this.injector
+    }) as Signal<IBookWithId[]>;
   }
 
   /**
@@ -170,15 +173,9 @@ export class BookService {
    * @returns {Signal<IBookWithId | undefined>} a signal that resolves to the book with the given id, or undefined if it does not exist
    */
   public getBook(id: string): Signal<IBookWithId | undefined> {
-    return computed(() => {
-      const res = this.books().find((book) => book.id === id);
-      if (res) {
-        return res;
-      } else {
-        this.router.navigate(['/']);
-        return undefined;
-      }
-    });
+    return toSignal(
+      docData(doc(this.booksCollectionRef, id) , { idField: 'id' })
+    ) as Signal<IBookWithId | undefined>;
   }
 
   /**
