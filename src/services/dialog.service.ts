@@ -12,7 +12,10 @@ export class DialogService {
   private dialog = inject(MatDialog);
 
   constructor() {}
-
+  /**
+   * Opens a dialog to add a new book
+   * @returns void
+   */
   public async addBook() {
     const dialogRef = this.dialog.open(
       (await import('../components/book-dialog/book-dialog.component'))
@@ -28,7 +31,11 @@ export class DialogService {
     );
     if (result) this.bookService.addBook(result);
   }
-
+  /**
+   * Opens a dialog to delete a book
+   * @param book the book to be deleted
+   * @param callbackFn a callback function to be called after the book is deleted
+   */
   public async deleteBookDialog(book: IBookWithId, callbackFn = () => {}) {
     const dialogRef = this.dialog.open(
       (
@@ -48,8 +55,12 @@ export class DialogService {
       await this.bookService.deleteBook(book);
       callbackFn();
     }
-
   }
+  /**
+   * Opens a dialog to edit a book
+   * @param book the book to be edited
+   * @returns void
+   */
   public async editBookDialog(book: IBookWithId) {
     const dialogRef = this.dialog.open(
       (await import('../components/book-dialog/book-dialog.component'))

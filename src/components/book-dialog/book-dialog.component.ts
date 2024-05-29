@@ -59,26 +59,35 @@ export class BookDialogComponent {
   private httpClient = inject(HttpClient);
   public queryFormControl = new FormControl('', [Validators.minLength(5)]);
   public queryStatus = 'idle';
+
   public formGroup = this.fb.group({
-    title: [this.dialogData.title, [Validators.required, Validators.maxLength(100)]],
+    title: [
+      this.dialogData.title,
+      [Validators.required, Validators.maxLength(100)],
+    ],
+
     authors: [this.dialogData.authors, [Validators.minLength(1)]],
+
     rating: [this.dialogData.rating, [Validators.max(10), Validators.min(0)]],
+
     yearOfPublication: [
       this.dialogData.yearOfPublication,
-      [
-        Validators.max(new Date().getFullYear()),
-        Validators.min(1800),
-      ],
+      [Validators.max(new Date().getFullYear()), Validators.min(1800)],
     ],
+
     isbn: [
       this.dialogData.isbn,
       [Validators.pattern(/^[0-9]{10}$|^[0-9]{13}$|(^[0-9]{3}-[0-9]{10}$)/)],
     ],
+
     coverUrl: [this.dialogData.coverUrl],
   });
-
+  // The keys that are used to separate the authors
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  public async lookupWithISBN() {
+  /**
+   * Queries the Google Books API for a book with the given query
+   */
+  public async queryForBook() {
     if (this.queryFormControl.valid) {
       this.queryStatus = 'loading';
       const response = await lastValueFrom(
@@ -102,6 +111,11 @@ export class BookDialogComponent {
     }
   }
   constructor() {}
+  /**
+   * Closes the dialog and returns the form data if it is valid
+   * If the form data is not valid, marks all controls as touched
+   * and does not close the dialog
+   */
   public close() {
     if (this.formGroup.valid && this.formGroup.value.authors!.length > 0) {
       this.dialogRef.close(this.formGroup.value);
