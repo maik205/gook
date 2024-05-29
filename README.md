@@ -1,6 +1,6 @@
 # Gook - Book Management
 
-Gook is a comprehensive tool designed to help you manage your book librarym, built with Angular and provides a user-friendly interface for managing your books.
+Gook is a comprehensive tool designed to help you manage your book library, built with Angular and provides a user-friendly interface for managing your books.
 
 ## Features
 
