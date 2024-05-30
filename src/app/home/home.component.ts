@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit {
     const sorted = Array.from(this.bookService.groupedBooks().entries()).sort(
       (a, b) => {
         if (a[0] === 'Unknown') return 1;
-        return a[0] < b[0] ? 1 : -1;
+        return +a[0] < +b[0] ? 1 : -1;
       }
     );
     sorted.forEach((book) => {
