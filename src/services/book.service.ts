@@ -73,7 +73,7 @@ export class BookService {
     return groupingContext.group();
   });
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Set the grouping strategy
@@ -117,9 +117,9 @@ export class BookService {
         this.booksCollectionRef as CollectionReference<IBookWithId>,
         { idField: 'id' }
       )
-    , {
-      injector: this.injector
-    }) as Signal<IBookWithId[]>;
+      , {
+        injector: this.injector
+      }) as Signal<IBookWithId[]>;
   }
 
   /**
@@ -128,6 +128,7 @@ export class BookService {
    * @returns {Promise<DocumentReference>} the reference to the added book document
    */
   public async addBook(book: IBook): Promise<DocumentReference> {
+    book = this.parseNumericValues(book) as IBook;
     return await addDoc(this.booksCollectionRef, book);
   }
 
@@ -153,8 +154,8 @@ export class BookService {
     if (!(await this.ifExists(book))) {
       throw new Error('Book does not exist');
     }
-    let _book = { ...book, id: undefined };
-    delete _book.id;
+    let _book = this.parseNumericValues({ ...book, id: undefined } as IBook);
+
     return await updateDoc(this.getBookRef(book), _book);
   }
 
@@ -174,7 +175,7 @@ export class BookService {
    */
   public getBook(id: string): Signal<IBookWithId | undefined> {
     return toSignal(
-      docData(doc(this.booksCollectionRef, id) , { idField: 'id' })
+      docData(doc(this.booksCollectionRef, id), { idField: 'id' })
     ) as Signal<IBookWithId | undefined>;
   }
 
@@ -187,6 +188,14 @@ export class BookService {
       title: '',
       authors: [],
       rating: 0,
+    };
+  }
+
+  private parseNumericValues(book: IBook) {
+    return {
+      ...book,
+      rating: book.rating ? book.rating : 0,
+      yearOfPublication: book.yearOfPublication ? +book.yearOfPublication : undefined,
     };
   }
 }

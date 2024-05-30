@@ -72,7 +72,9 @@ export class BookDialogComponent {
 
     yearOfPublication: [
       this.dialogData.yearOfPublication,
-      [Validators.max(new Date().getFullYear()), Validators.pattern(/[0-9]{04}/gm), Validators.min(1800)],
+      [Validators.max(new Date().getFullYear()),
+      Validators.pattern(/[0-9]{4}/),
+      Validators.min(1800)],
     ],
 
     isbn: [
@@ -110,7 +112,7 @@ export class BookDialogComponent {
       }
     }
   }
-  constructor() {}
+  constructor() { }
   /**
    * Closes the dialog and returns the form data if it is valid
    * If the form data is not valid, marks all controls as touched
